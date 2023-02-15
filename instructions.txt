@@ -1,0 +1,22 @@
+-- first stop elasticsearch if it is running
+
+-- then do the followings
+cp -pr /etc/letsencrypt/archive/yoursite /etc/elasticsearch/config/certs
+chmod 750 /etc/elasticsearch/config/certs/
+chmod 640 /etc/elasticsearch/config/certs/yoursite/*
+
+-- then configure /etc/elasticsearch/elasticsearch.yml as it is here:
+cluster.name: my-application
+node.name: node-1
+xpack.security.http.ssl.enabled: true
+xpack.security.http.ssl.key: /etc/elasticsearch/config/certs/yoursite/privkey1.pem
+xpack.security.http.ssl.certificate: /etc/elasticsearch/config/certs/yoursite/cert1.pem
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.client_authentication: required
+xpack.security.transport.ssl.key: /etc/elasticsearch/config/certs/yoursite/privkey1.pem
+xpack.security.transport.ssl.certificate: /etc/elasticsearch/config/certs/yoursite/cert1.pem
+http.host: 0.0.0.0
+
+-- then start elasticsearch
+service elasticsearch start
